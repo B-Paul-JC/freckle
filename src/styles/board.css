@@ -1,0 +1,18 @@
+div#board {
+    width: 60dvh;
+    display: grid;
+    min-width: 240px;
+    max-width: 300px;
+    margin-inline: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    grid-area: 2 / 2 / 3 / 3;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+button.box-spaces {
+    background-color: #593188;
+    width: 100%;
+    height: 100%;
+}
