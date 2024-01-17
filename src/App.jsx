@@ -1,17 +1,31 @@
 import { useState } from "react";
-import { Board } from "./components/Board";
-import { Box } from "./components/Box";
 import "./App.css";
-import { InfoScreen } from "./components/InfoScreen";
-import { ResultAnnouncement } from "./components/ResultAnnouncement";
+import "./styles/board.css";
+import "./styles/helper-elems.css";
 
 const App = () => {
   const [board, setBoard] = useState(Array(9).fill(""));
+  const [scores, setScores] = useState([]);
   const [isXNext, setIsXNext] = useState(true);
-  const winner = calculateWinner(board);
+  const [winner, lines] = calculateWinner(board);
+  const xScore = calculateXwins(scores);
+  const oScore = calculateOwins(scores);
+  const ties = calculateTies(scores);
+
+  function calculateXwins(scores) {
+    return scores.filter((score) => score === "X").length;
+  }
+
+  function calculateOwins(scores) {
+    return scores.filter((score) => score === "O").length;
+  }
+
+  function calculateTies(scores) {
+    return scores.filter((score) => score === "T").length;
+  }
 
   const handleClick = (index) => {
-    if (board[index] || winner) return;
+    if (board[index] || winner !== "T") return;
     const newBoard = board.slice();
     newBoard[index] = isXNext ? "X" : "O";
     setBoard(newBoard);
@@ -29,6 +43,7 @@ const App = () => {
       [0, 4, 8],
       [2, 4, 6],
     ];
+
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (
@@ -36,23 +51,79 @@ const App = () => {
         squares[a] === squares[b] &&
         squares[a] === squares[c]
       ) {
-        return squares[a];
+        return [squares[a], lines[i]];
       }
     }
-    return null;
+    return ["T", []];
   }
+  const hasAvailableMoves = board.filter((value) => value === "").length > 0;
+  let gameState;
+
+  if (winner && winner !== "T") {
+    gameState = { text: `${winner} Wins!`, state: "over" };
+  } else {
+    if (hasAvailableMoves) {
+      gameState = { text: `Game in progress`, state: "ongoing" };
+    } else {
+      gameState = { text: `Game drawn`, state: "over" };
+    }
+  }
+
+  const gameOver = gameState.state === "over";
+
+  const squares = board.map((value, index) => {
+    return (
+      <button
+        key={index}
+        onClick={() => handleClick(index)}
+        className={`box-spaces ${lines.includes(index) ? "win" : ""}`}
+        disabled={gameOver}
+      >
+        {value}
+      </button>
+    );
+  });
+
+  const resetGame = () => {
+    setBoard(Array(9).fill(""));
+    setScores((prev) => [...prev, winner]);
+    setIsXNext(true);
+  };
 
   return (
     <>
-      <InfoScreen />
-      <Board>
-        {board.map((value, index) => (
-          <Box key={index} {...{ clicker: () => handleClick(index) }}>
-            {value}
-          </Box>
-        ))}
-      </Board>
-      <ResultAnnouncement />
+      <section id="info">
+        <span>
+          Next <br />
+          {isXNext ? "X" : "O"}
+        </span>
+        <span>
+          Games: <br />
+          Scoreboard
+          <br />
+          X: {xScore}
+          <br />
+          O: {oScore}
+          <br />
+          Ties: {ties}
+        </span>
+      </section>
+      <div id="board">{squares}</div>
+      <section id="results">
+        {gameState.text}
+        <br />
+        <br />
+        {gameOver && (
+          <button
+            className="reset-game"
+            onClick={() => {
+              resetGame();
+            }}
+          >
+            New Game
+          </button>
+        )}
+      </section>
     </>
   );
 };

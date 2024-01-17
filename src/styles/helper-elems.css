@@ -1,7 +1,47 @@
 section#info {
-    grid-area: 1 / 1 / 1 / 4;
+  font-weight: 600;
+  grid-area: 1 / 1 / 1 / 4;
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  justify-content: space-between;
 }
 
 section#results {
-    grid-area: 3 / 2 / 4 / 3;
+  grid-area: 3 / 2 / 4 / 3;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+button.reset-game {
+  background-color: #f2f2f2; /* Light gray background */
+  color: #333; /* Dark text color for contrast */
+  border: 2px solid #ccc; /* Slightly darker border for definition */
+  padding: 10px 20px; /* Spacing inside the button */
+  font-size: 1em; /* Standard font size */
+  font-weight: bold; /* Bold text for better legibility */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition for hover effects */
+}
+
+button.reset-game:hover {
+  background-color: #e6e6e6; /* Darker shade on hover */
+  color: #000; /* Black text on hover */
+  border-color: #b3b3b3; /* Darker border on hover */
+}
+
+button.reset-game:active {
+  background-color: #ccc; /* Even darker shade when the button is clicked */
+  transform: translateY(
+    2px
+  ); /* Slight downward movement to mimic a pressing effect */
+}
+
+button.reset-game:focus {
+  outline: none; /* Remove default focus outline */
 }
